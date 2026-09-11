@@ -1,6 +1,6 @@
 name: urchin tests
 
-on: [push]
+on: [push, pull_request]
 
 permissions:
   contents: read
@@ -8,10 +8,11 @@ permissions:
 jobs:
   tests:
     permissions:
-      contents: write
+      contents: read  # for actions/checkout@v6
 
     name: "tests"
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     defaults:
       run:
         shell: 'script -q -e -c "${{ matrix.shell }} {0}"'
@@ -19,13 +20,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - shell: bash
+        exclude:
+          - shell: sh
             suite: install_script
-      #   shell:
-      #     - bash
-      #   suite:
-      #     - install_script
+          - shell: dash
+            suite: install_script
+          - shell: zsh
+            suite: install_script
+          - shell: ksh
+            suite: install_script
+        suite:
+          - install_script
+          - sourcing
+          - slow
+          - installation_iojs
+        shell:
+          - sh
+          - bash
+          - dash
+          - zsh
+          # - ksh
 
     steps:
       - name: Harden Runner
@@ -37,19 +51,37 @@ jobs:
             raw.githubusercontent.com:443
             nodejs.org:443
             iojs.org:443
-      - uses: actions/checkout@v4
+            azure.archive.ubuntu.com:80
+            packages.microsoft.com:443
+      - uses: actions/checkout@v6
+      - run: sudo apt-get update; sudo apt-get install ${{ matrix.shell }}
+        if: matrix.shell == 'zsh' || matrix.shell == 'ksh'
+        # zsh (https://github.com/actions/runner-images/issues/264) and ksh are not in the ubuntu image
+        shell: bash
       - run: sudo ${{ matrix.shell }} --version 2> /dev/null || dpkg -s ${{ matrix.shell }} 2> /dev/null || which ${{ matrix.shell }}
       - run: curl --version
       - run: wget --version
-      - uses: ljharb/actions/node/run@main
+      - uses: ljharb/actions/node/install@main
         name: 'npm install && version checks'
         with:
           node-version: 'lts/*'
           skip-ls-check: true
-          shell-command: echo installed
       - run: npm ls urchin
+      - run: npx which urchin
       - run: env
-      - run: make TERM=xterm-256color TEST_SUITE="${{ matrix.suite }}" SHELL="${{ matrix.shell }}" URCHIN="$(npx which urchin)" test-${{ matrix.shell }}
+      - name: Run tests
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            timeout 600 make TERM=xterm-256color TEST_SUITE="${{ matrix.suite }}" SHELL="${{ matrix.shell }}" URCHIN="$(npx which urchin)" test-${{ matrix.shell }} && exit 0
+            EXIT_CODE=$?
+            if [ $EXIT_CODE -ne 124 ]; then
+              exit $EXIT_CODE
+            fi
+            echo "Attempt ${attempt} timed out; retrying..."
+          done
+          echo "All 3 attempts timed out."
+          exit 1
 
   nvm:
     permissions:

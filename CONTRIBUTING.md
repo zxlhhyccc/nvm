@@ -23,10 +23,10 @@ Explain the problem and include additional details to help maintainers reproduce
 * **Use a clear and descriptive title** for the issue to identify the problem.
 
 * **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining which command exactly you used in the terminal. When listing steps, **don't just say what you did, but explain how you did it**. For example, if you moved the cursor to the end of a line, explain if you used the mouse, or a keyboard shortcut or a command, and if so which one?
-* **Provide specific examples to demonstrate the steps**. Include links to files or Github projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
+* **Provide specific examples to demonstrate the steps**. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
 * **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
 * **Explain which behavior you expected to see instead and why.**
-* **Provide as much context as possible** in order to help others verify and ultimately fix the issue. This includes giving us as much details as possible about your environment, so we can more easily confirm the problem.
+* **Provide as much context as possible** in order to help others verify and ultimately fix the issue. This includes giving us as many details as possible about your environment, so we can more easily confirm the problem.
 
 ## Documentation
 
@@ -113,3 +113,11 @@ Co-authored-by: Name Here <email@here>
 
 # Where can I ask for help?
 If you have any questions, please contact [@LJHarb](mailto:ljharb@gmail.com).
+
+# Developer's Certificate of Origin 1.1
+
+By making a contribution to this project, I certify that:
+  - The contribution was created in whole or in part by me and I have the right to submit it under the open source license indicated in the file; or
+  - The contribution is based upon previous work that, to the best of my knowledge, is covered under an appropriate open source license and I have the right under that license to submit that work with modifications, whether created in whole or in part by me, under the same open source license (unless I am permitted to submit under a different license), as indicated in the file; or
+  - The contribution was provided directly to me by some other person who certified (a), (b) or (c) and I have not modified it.
+  - I understand and agree that this project and the contribution are public and that a record of the contribution (including all personal information I submit with it, including my sign-off) is maintained indefinitely and may be redistributed consistent with this project or the open source license(s) involved.
